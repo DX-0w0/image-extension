@@ -17,8 +17,8 @@ if (!fs.existsSync(saveDir)) {
 
 // List of image URLs
 // const imageUrls = [
-//     'https://media.istockphoto.com/id/2163630620/photo/abstract-minimalist-product-display-with-pink-smoke-and-wooden-branches.webp?s=2048x2048&w=is&k=20&c=Mk2OWS5Wzx4GeMROu0ZykAluoZeNceeSDKqnbA9Rzy8=',
-//     'https://plus.unsplash.com/premium_photo-1683910767532-3a25b821f7ae?q=80&w=2008&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+//   'https://media.istockphoto.com/id/2163630620/photo/abstract-minimalist-product-display-with-pink-smoke-and-wooden-branches.webp?s=2048x2048&w=is&k=20&c=Mk2OWS5Wzx4GeMROu0ZykAluoZeNceeSDKqnbA9Rzy8=',
+//   'https://plus.unsplash.com/premium_photo-1683910767532-3a25b821f7ae?q=80&w=2008&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 // ]
 
 // Change url and totalImages according to the need
@@ -45,8 +45,12 @@ async function buildImageUrls(url, totalImages) {
 
 async function downloadImage(url, index = 0) {
   try {
-    const fileName = path.basename(new URL(url).pathname)
     // const fileName = `${index}.jpg`
+    let fileName = path.basename(new URL(url).pathname)
+    const extension = path.extname(fileName)
+    if (!extension) {
+      fileName += '.jpg'
+    }
     const filePath = path.join(saveDir, fileName)
     const response = await axios({
       method: 'get',

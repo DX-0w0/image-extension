@@ -9,7 +9,7 @@ https://example.com/xa125/4.jpg
 ```
 
 
-# How To
+# How To Use
 - run `npm i`
 - open any gallery image webpage >> right click on image to `Open Image in a new tab` to get the image original size >> copy the url
 - Replace the `url` and `totalImages`
