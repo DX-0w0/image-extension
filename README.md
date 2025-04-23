@@ -11,6 +11,6 @@ https://example.com/xa125/4.jpg
 
 # How To
 - run `npm i`
-- open any gallery image then right click on image to `Open Image in a new tab` and get the url
+- open any gallery image then right click on image to `Open Image in a new tab` to get the image original size and copy the url
 - Replace the `url` and `totalImages`
 - run `node downloadImages.js`
