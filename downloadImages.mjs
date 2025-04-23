@@ -1,12 +1,13 @@
-const fs = require('fs')
-const path = require('path')
-const axios = require('axios')
-const { pipeline } = require('stream')
-const { promisify } = require('util')
+import fs from 'fs'
+import path from 'path'
+import axios from 'axios'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 
 const streamPipeline = promisify(pipeline)
 
 // Directory to save images
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 const saveDir = path.join(__dirname, 'images')
 
 // Ensure the folder exists
