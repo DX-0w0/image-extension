@@ -3,52 +3,61 @@ import path from 'path'
 import axios from 'axios'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
-import { url, totalImages } from './input.mjs'
+import { fileURLToPath } from 'url'
+import * as cheerio from 'cheerio'
 
 const streamPipeline = promisify(pipeline)
+let saveDir
 
 // Directory to save images
-const __dirname = path.dirname(new URL(import.meta.url).pathname)
-const saveDir = path.join(__dirname, 'images')
+export function createImageFolder() {
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
+  saveDir = path.join(__dirname, 'images_folder')
 
-// Ensure the folder exists
-if (!fs.existsSync(saveDir)) {
-  fs.mkdirSync(saveDir)
+  // Ensure the folder exists
+  if (!fs.existsSync(saveDir)) {
+    fs.mkdirSync(saveDir)
+  }
 }
 
-// List of image URLs
-// const imageUrls = [
-//   'https://media.istockphoto.com/id/2163630620/photo/abstract-minimalist-product-display-with-pink-smoke-and-wooden-branches.webp?s=2048x2048&w=is&k=20&c=Mk2OWS5Wzx4GeMROu0ZykAluoZeNceeSDKqnbA9Rzy8=',
-//   'https://plus.unsplash.com/premium_photo-1683910767532-3a25b821f7ae?q=80&w=2008&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-// ]
-
-async function buildImageUrls(url, totalImages) {
-  const newUrl = new URL(url)
+export function imageUrlHelper(imageUrl) {
+  const newUrl = new URL(imageUrl)
 
   const parts = newUrl.pathname.split('/')
-  const fileName = parts.pop()
-  const basePath = parts.join('/')
+  const filename = parts.pop()
+  const pathnameWithoutFilename = parts.join('/')
 
-  const baseUrl = `${newUrl.origin}${basePath}`
-  const extension = path.extname(fileName)
+  const urlWithoutFilename = `${newUrl.origin}${pathnameWithoutFilename}`
+  const extension = path.extname(filename)
+
+  return {
+    filename,
+    urlWithoutFilename,
+    extension,
+  }
+}
+
+export async function buildImageUrls(url, totalImages) {
+  const { urlWithoutFilename, extension } = imageUrlHelper(url)
 
   const imageUrls = new Array(totalImages)
-    .fill(baseUrl)
+    .fill(urlWithoutFilename)
     .map((url, i) => `${url}/${i + 1}${extension}`)
   console.log('imageUrls', imageUrls)
 
   return imageUrls
 }
 
-async function downloadImage(url, index = 0) {
+export async function downloadImage(url) {
   try {
-    // const fileName = `${index}.jpg`
-    let fileName = path.basename(new URL(url).pathname)
-    const extension = path.extname(fileName)
-    if (!extension) {
-      fileName += '.jpg'
+    const { filename: FN, extension } = imageUrlHelper(url)
+    let filename = FN
+    let imageNumber = filename.split('.')[0]
+    if (Number(imageNumber) < 10) {
+      filename = `0${imageNumber}${extension}`
     }
-    const filePath = path.join(saveDir, fileName)
+    const filePath = path.join(saveDir, filename)
     const response = await axios({
       method: 'get',
       url,
@@ -60,21 +69,55 @@ async function downloadImage(url, index = 0) {
     })
 
     await streamPipeline(response.data, fs.createWriteStream(filePath))
-    console.log(`✅ Saved: ${fileName}`)
+    console.log(`✅ Saved: ${filename}`)
   } catch (err) {
     console.error(`❌ Failed to download from ${url}:`, err.message)
   }
 }
 
-async function downloadAllImages(imageUrls) {
+export async function downloadAllImages(imageUrls) {
   console.log('🚀 Downloading images...')
   await Promise.all(imageUrls.map((url, index) => downloadImage(url, index)))
   console.log('🎉 All images downloaded.')
 }
 
-async function run() {
-  const imageUrls = await buildImageUrls(url, totalImages)
-  downloadAllImages(imageUrls)
+export async function buildGalleryPageLinks(url) {
+  try {
+    const response = await axios(url)
+    const $ = cheerio.load(response.data)
+
+    const galleryContainer = $('#gdt')
+    const links = galleryContainer.find('a')
+
+    const hrefs = links
+      .map((i, el) => {
+        return $(el).attr('href')
+      })
+      .get()
+
+    return hrefs
+  } catch (error) {
+    console.error(`❌ Failed to get links from gallery`, error.message)
+    return []
+  }
 }
 
-run()
+export async function buildImageUrlsFromGallery(url) {
+  const imageUrls = []
+  const links = await buildGalleryPageLinks(url)
+
+  for (const link of links) {
+    console.log('link', link)
+    try {
+      const response = await axios(link)
+      const $ = cheerio.load(response.data)
+      const img = $('#img').attr('src')
+      imageUrls.push(img)
+    } catch (error) {
+      console.error(`❌ Failed link ${link}`, error.message)
+    }
+  }
+
+  console.log('imageUrls', imageUrls)
+  return imageUrls
+}
