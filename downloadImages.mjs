@@ -5,19 +5,23 @@ import { pipeline } from 'stream'
 import { promisify } from 'util'
 import { fileURLToPath } from 'url'
 import * as cheerio from 'cheerio'
+import os from 'os'
 
 const streamPipeline = promisify(pipeline)
 let saveDir
 
 // Directory to save images
 export function createImageFolder() {
+  // Current project dir
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = path.dirname(__filename)
-  saveDir = path.join(__dirname, 'images_folder')
+  console.log('__dirname', __dirname)
+
+  saveDir = path.join(os.homedir(), 'Downloads', 'images_downloaded')
 
   // Ensure the folder exists
   if (!fs.existsSync(saveDir)) {
-    fs.mkdirSync(saveDir)
+    fs.mkdirSync(saveDir, { recursive: true })
   }
 }
 
