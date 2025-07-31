@@ -11,19 +11,19 @@ const streamPipeline = promisify(pipeline)
 let saveDir
 
 // Directory to save images
-export function createImageFolder() {
-  // Current project dir
-  const __filename = fileURLToPath(import.meta.url)
-  const __dirname = path.dirname(__filename)
-  console.log('__dirname', __dirname)
+// export function createImageFolder() {
+//   // Current project dir
+//   const __filename = fileURLToPath(import.meta.url)
+//   const __dirname = path.dirname(__filename)
+//   console.log('__dirname', __dirname)
 
-  saveDir = path.join(os.homedir(), 'Downloads', 'images_downloaded')
+//   saveDir = path.join(os.homedir(), 'Downloads', 'images_downloaded')
 
-  // Ensure the folder exists
-  if (!fs.existsSync(saveDir)) {
-    fs.mkdirSync(saveDir, { recursive: true })
-  }
-}
+//   // Ensure the folder exists
+//   // if (!fs.existsSync(saveDir)) {
+//   //   fs.mkdirSync(saveDir, { recursive: true })
+//   // }
+// }
 
 export function imageUrlHelper(imageUrl) {
   const newUrl = new URL(imageUrl)

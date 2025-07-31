@@ -25,5 +25,6 @@
     "48": "icons/scanner_48.png",
     "128": "icons/scanner_128.png"
   },
-  "permissions": ["storage", "tabs", "activeTab", "scripting"]
+  "permissions": ["storage", "tabs", "activeTab", "scripting", "downloads"],
+  "host_permissions": ["<all_urls>"]
 }

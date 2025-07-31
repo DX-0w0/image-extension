@@ -3,7 +3,7 @@ import {
   buildImageUrls,
   downloadAllImages,
   buildImageUrlsFromGallery,
-} from './downloadImages.mjs'
+} from './downloadImages.js'
 
 // Change url and totalImages according to the need
 const url = 'https://www.xyz.com/abc/1.jpg'
@@ -14,9 +14,9 @@ async function run() {
   createImageFolder()
 
   // const imageUrls = await buildImageUrls(url, totalImages)
-  const imageUrls = await buildImageUrlsFromGallery(galleryUrl)
+  // const imageUrls = await buildImageUrlsFromGallery(galleryUrl)
 
-  downloadAllImages(imageUrls)
+  // downloadAllImages(imageUrls)
 }
 
 run()
