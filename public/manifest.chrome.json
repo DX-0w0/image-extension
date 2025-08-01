@@ -6,9 +6,9 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/scanner_16.png",
-      "48": "icons/scanner_48.png",
-      "128": "icons/scanner_128.png"
+      "16": "icons/sauce_16.png",
+      "48": "icons/sauce_48.png",
+      "128": "icons/sauce_128.png"
     }
   },
   "background": {
@@ -22,9 +22,9 @@
     }
   ],
   "icons": {
-    "16": "icons/scanner_16.png",
-    "48": "icons/scanner_48.png",
-    "128": "icons/scanner_128.png"
+    "16": "icons/sauce_16.png",
+    "48": "icons/sauce_48.png",
+    "128": "icons/sauce_128.png"
   },
   "permissions": ["storage", "tabs", "activeTab", "scripting", "downloads"],
   "host_permissions": ["<all_urls>"]
