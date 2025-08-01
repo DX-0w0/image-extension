@@ -1,3 +1,6 @@
+import axios from 'axios'
+import * as cheerio from 'cheerio'
+
 export function imageUrlHelper(imageUrl) {
   const newUrl = new URL(imageUrl)
 
@@ -17,12 +20,15 @@ export function imageUrlHelper(imageUrl) {
   }
 }
 
-export function savedFilenameHelper(url) {
+export function savedFilename(url, pageNumber = undefined) {
   const { filename: FN, extension, imageNumber } = imageUrlHelper(url)
   let filename = FN
+  let currentNumber = pageNumber || imageNumber
 
-  if (imageNumber < 10) {
-    filename = `0${imageNumber}${extension}`
+  if (currentNumber < 10) {
+    filename = `0${currentNumber}${extension}`
+  } else if (pageNumber) {
+    filename = `${pageNumber}${extension}`
   }
 
   return filename
@@ -34,6 +40,46 @@ export function buildImageUrls(url, totalImages) {
   const imageUrls = []
   for (let i = 0; i < totalImages; i++) {
     imageUrls.push(`${urlWithoutFilename}/${imageNumber + i}${extension}`)
+  }
+
+  console.log('imageUrls', imageUrls)
+  return imageUrls
+}
+
+export async function buildGalleryPageLinks(url) {
+  try {
+    const response = await axios(url)
+    const $ = cheerio.load(response.data)
+
+    const galleryContainer = $('#gdt')
+    const links = galleryContainer.find('a')
+
+    const hrefs = links
+      .map((i, el) => {
+        return $(el).attr('href')
+      })
+      .get()
+
+    return hrefs
+  } catch (error) {
+    console.error(`❌ Failed to get links from gallery`, error.message)
+    return []
+  }
+}
+
+export async function buildImageUrlsFromGallery(url) {
+  const imageUrls = []
+  const links = await buildGalleryPageLinks(url)
+
+  for (const link of links) {
+    try {
+      const response = await axios(link)
+      const $ = cheerio.load(response.data)
+      const img = $('#img').attr('src')
+      imageUrls.push(img)
+    } catch (error) {
+      console.error(`❌ Failed link ${link}`, error.message)
+    }
   }
 
   console.log('imageUrls', imageUrls)

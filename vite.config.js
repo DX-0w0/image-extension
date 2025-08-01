@@ -16,10 +16,24 @@ export default defineConfig({
           if (chunk.name === 'background') return 'background.js'
           if (chunk.name === 'content') return 'content.js'
           return '[name].js'
-        }
-      }
+        },
+      },
     },
     outDir: 'dist',
     emptyOutDir: true,
-  }
+    target: 'esnext',
+    define: {
+      global: 'globalThis', // required for cheerio
+    },
+    // resolve: {
+    //   alias: {
+    //     stream: 'stream-browserify',
+    //     util: 'util',
+    //     buffer: 'buffer',
+    //   },
+    // },
+    // optimizeDeps: {
+    //   include: ['axios', 'cheerio'],
+    // },
+  },
 })

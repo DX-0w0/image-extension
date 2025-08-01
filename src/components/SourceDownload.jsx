@@ -9,11 +9,9 @@ function SourceDownload() {
     e.preventDefault()
     if (!urlRef.current.value || !numberRef.current.value) return
 
-    // 👇 Add your download logic here
     const url = urlRef.current.value
     const totalImages = numberRef.current.value
     
-    console.log('Downloading from:', url, totalImages)
     chrome.runtime.sendMessage({ sourceDownload: { url, totalImages } })
   }
 

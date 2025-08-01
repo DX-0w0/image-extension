@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import SourceDownload from './SourceDownload'
+import GalleryDownload from './GalleryDownload'
 
 function Downloader() {
   const [isDownloading, setIsDownloading] = useState(false)
@@ -7,6 +8,7 @@ function Downloader() {
   return (
     <div className='downloader'>
       <SourceDownload />
+      <GalleryDownload />
     </div>
   )
 }
