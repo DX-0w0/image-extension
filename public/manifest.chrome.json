@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Download images",
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/scanner_16.png",
       "48": "icons/scanner_48.png",

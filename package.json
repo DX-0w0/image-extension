@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --watch",
     "build:chrome": "vite build && cp public/manifest.chrome.json dist/manifest.json",
     "build:firefox": "vite build && cp public/manifest.firefox.json dist/manifest.json",
     "lint": "eslint .",
