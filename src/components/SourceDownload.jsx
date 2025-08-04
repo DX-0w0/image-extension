@@ -41,7 +41,6 @@ function SourceDownload() {
           type='number'
           placeholder='Enter total images'
           min='0'
-          value='1'
           required
         />
         <button type='submit' disabled={isDownloading}>
