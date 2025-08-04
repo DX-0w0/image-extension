@@ -8,24 +8,45 @@ function SourceDownload() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!urlRef.current.value || !numberRef.current.value) return
+    setIsDownloading(true)
 
     const url = urlRef.current.value
     const totalImages = numberRef.current.value
-    
-    chrome.runtime.sendMessage({ sourceDownload: { url, totalImages } })
+
+    chrome.runtime.sendMessage(
+      { sourceDownload: { url, totalImages } },
+      (response) => {
+        // console.log('Background response:', response)
+        if (response.count === 0) {
+          alert('No Image Urls were found.')
+        }
+      }
+    )
+
+    setIsDownloading(false)
   }
 
   return (
     <div className='source-download'>
+      <p>Source Image Url</p>
       <form onSubmit={handleSubmit}>
-        <input ref={urlRef} type='url' placeholder='Enter file URL' required />
+        <input
+          ref={urlRef}
+          type='url'
+          placeholder='Enter source image URL'
+          required
+        />
         <input
           ref={numberRef}
           type='number'
           placeholder='Enter total images'
+          min='0'
+          value='1'
           required
         />
-        <button type='submit'>Download</button>
+        <button type='submit' disabled={isDownloading}>
+          Download
+        </button>
       </form>
     </div>
   )

@@ -38,6 +38,11 @@ export function buildImageUrls(url, totalImages) {
   const { imageNumber, urlWithoutFilename, extension } = imageUrlHelper(url)
 
   const imageUrls = []
+
+  if (extension === '.undefined') {
+    return imageUrls
+  }
+
   for (let i = 0; i < totalImages; i++) {
     imageUrls.push(`${urlWithoutFilename}/${imageNumber + i}${extension}`)
   }
@@ -60,7 +65,7 @@ export async function buildGalleryPageLinks(url) {
       })
       .get()
 
-    return hrefs
+    return hrefs || []
   } catch (error) {
     console.error(`❌ Failed to get links from gallery`, error.message)
     return []

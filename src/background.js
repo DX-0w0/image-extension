@@ -24,6 +24,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     for (const imageUrl of imageUrls) {
       downloadHelper(imageUrl)
     }
+
+    sendResponse({ count: imageUrls.length })
+    return true // IMPORTANT: keep the message channel open for async response
   }
 
   if (request.galleryDownload) {
@@ -36,7 +39,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const pageNumber = index + 1
         downloadHelper(imageUrl, pageNumber)
       }
+
+      sendResponse({ count: imageUrls.length })
     }
+
     galleryDownloader()
+    return true // IMPORTANT: keep the message channel open for async response
   }
 })

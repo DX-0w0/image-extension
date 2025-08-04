@@ -2,11 +2,11 @@ import { useState } from 'react'
 import SourceDownload from './SourceDownload'
 import GalleryDownload from './GalleryDownload'
 
-function Downloader() {
-  const [isDownloading, setIsDownloading] = useState(false)
+import style from './Downloader.module.scss'
 
+function Downloader() {
   return (
-    <div className='downloader'>
+    <div className={style.downloader}>
       <SourceDownload />
       <GalleryDownload />
     </div>

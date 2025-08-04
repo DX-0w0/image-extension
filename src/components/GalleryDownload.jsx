@@ -8,43 +8,33 @@ function GalleryDownload() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!urlRef.current.value) return
+    setIsDownloading(true)
 
     const url = urlRef.current.value
 
-    chrome.runtime.sendMessage({ galleryDownload: { url } })
-    // chrome.tabs.create({ url }, (tab) => {
-    //   chrome.scripting.executeScript({
-    //     target: { tabId: tab.id },
-    //     files: ['content.js'],
-    //   })
+    chrome.runtime.sendMessage({ galleryDownload: { url } }, (response) => {
+      console.log('Background response:', response)
+      if (response.count === 0) {
+        alert('No Image Urls were found.')
+      }
+    })
 
-    //   // Send elementId after page loads
-    //   chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
-    //     if (tabId === tab.id && info.status === 'complete') {
-    //       chrome.tabs.sendMessage(tab.id, { action: 'extractLinks', elementId })
-    //       chrome.tabs.onUpdated.removeListener(listener)
-    //     }
-    //   })
-
-    //   chrome.runtime.onMessage.addListener((msg) => {
-    //     if (msg.action === 'returnLinks') {
-    //       const ul = document.getElementById('results')
-    //       ul.innerHTML = ''
-    //       msg.hrefs.forEach((href) => {
-    //         const li = document.createElement('li')
-    //         li.textContent = href
-    //         ul.appendChild(li)
-    //       })
-    //     }
-    //   })
-    // })
+    setIsDownloading(false)
   }
 
   return (
     <div className='gallery-download'>
+      <p>Gallery Image Url</p>
       <form onSubmit={handleSubmit}>
-        <input ref={urlRef} type='url' placeholder='Enter file URL' required />
-        <button type='submit'>Download</button>
+        <input
+          ref={urlRef}
+          type='url'
+          placeholder='Enter gallery URL'
+          required
+        />
+        <button type='submit' disabled={isDownloading}>
+          Download
+        </button>
       </form>
     </div>
   )
