@@ -23,7 +23,7 @@ function SourceDownload() {
       }
     )
 
-    setIsDownloading(false)
+    setTimeout(() => setIsDownloading(false), 1000)
   }
 
   return (
