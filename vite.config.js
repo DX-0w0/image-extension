@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
 // When building for firefox (manifest 2, does not support es5/6 module) bundle vite build each input file one at a time (popup, background, content)
+// having format: 'iife' can only have one input file 
 
 export default defineConfig({
   plugins: [react()],
@@ -10,8 +11,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'popup.html'),
-        background: resolve(__dirname, 'src/background.js'),
-        content: resolve(__dirname, 'src/content.js'),
+        // background: resolve(__dirname, 'src/background.js'),
+        // content: resolve(__dirname, 'src/content.js'),
       },
       output: {
         entryFileNames: '[name].js',

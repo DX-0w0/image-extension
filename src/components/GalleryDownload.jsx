@@ -1,9 +1,8 @@
 import { useRef, useState } from 'react'
 
-function GalleryDownload() {
+function GalleryDownload({ handleNotify }) {
   const [isDownloading, setIsDownloading] = useState(false)
   const urlRef = useRef('')
-  const numberRef = useRef(1)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -15,7 +14,7 @@ function GalleryDownload() {
     chrome.runtime.sendMessage({ galleryDownload: { url } }, (response) => {
       console.log('Background response:', response)
       if (response?.count === 0) {
-        alert('No Image Urls were found.')
+        handleNotify()
       }
     })
 

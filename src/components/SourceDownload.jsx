@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 
-function SourceDownload() {
+function SourceDownload({ handleNotify }) {
   const [isDownloading, setIsDownloading] = useState(false)
+
   const urlRef = useRef('')
   const numberRef = useRef(1)
 
@@ -18,7 +19,7 @@ function SourceDownload() {
       (response) => {
         // console.log('Background response:', response)
         if (response?.count === 0) {
-          alert('No Image Urls were found.')
+          handleNotify()
         }
       }
     )
