@@ -1,6 +1,6 @@
 # Image Sauce Extract Extension
 
-The dist folder is the extension build. Replace/rename `manifest.chrome.json / manifest.firefox.json` to `manifest.json` to use in either chrome or firefox extension. 
+The dist folder is the extension `production build`. Replace/rename `manifest.chrome.json / manifest.firefox.json` to `manifest.json` to use in either chrome or firefox extension. 
 
 # Local Image download 
 Works only for original source image urls that increment the last path by 1 for the images.
