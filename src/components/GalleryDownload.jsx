@@ -14,7 +14,7 @@ function GalleryDownload() {
 
     chrome.runtime.sendMessage({ galleryDownload: { url } }, (response) => {
       console.log('Background response:', response)
-      if (response.count === 0) {
+      if (response?.count === 0) {
         alert('No Image Urls were found.')
       }
     })

@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
+// When building for firefox (manifest 2, does not support es5/6 module) bundle vite build each input file one at a time (popup, background, content)
+
 export default defineConfig({
   plugins: [react()],
   build: {
@@ -12,15 +14,12 @@ export default defineConfig({
         content: resolve(__dirname, 'src/content.js'),
       },
       output: {
-        entryFileNames: (chunk) => {
-          if (chunk.name === 'background') return 'background.js'
-          if (chunk.name === 'content') return 'content.js'
-          return '[name].js'
-        },
+        entryFileNames: '[name].js',
+        format: 'iife', //Immediately Invoked Function Expression
       },
     },
     outDir: 'dist',
-    emptyOutDir: true,
+    emptyOutDir: false,
     target: 'esnext',
     define: {
       global: 'globalThis', // required for cheerio
