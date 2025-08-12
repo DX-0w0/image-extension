@@ -13,7 +13,6 @@ function GalleryDownload({ handleNotify }) {
 
     const url = urlRef.current.value
     const totalPage = numberRef.current.value || 1
-    console.log('hi')
 
     chrome.runtime.sendMessage({ galleryDownload: { url, totalPage } }, (response) => {
       console.log('Background response:', response)
