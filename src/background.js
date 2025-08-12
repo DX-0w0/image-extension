@@ -31,17 +31,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.galleryDownload) {
-    const galleryUrl = request.galleryDownload.url
+    const { url: galleryUrl, totalPage } = request.galleryDownload
 
     async function galleryDownloader() {
-      const imageUrls = (await buildImageUrlsFromGallery(galleryUrl)) || []
+      let pageNumber = 0
 
-      for (const [index, imageUrl] of imageUrls.entries()) {
-        const pageNumber = index + 1
-        downloadHelper(imageUrl, pageNumber)
+      for (let i = 1; i <= totalPage; i++) {
+        const currentUrl = i === 1 ? galleryUrl : `${galleryUrl}?p=${i - 1}`
+        const imageUrls = (await buildImageUrlsFromGallery(currentUrl)) || []
+
+        for (const imageUrl of imageUrls) {
+          pageNumber++
+          downloadHelper(imageUrl, pageNumber)
+        }
       }
 
-      sendResponse({ count: imageUrls.length })
+      await sendResponse({ count: pageNumber })
     }
 
     galleryDownloader()
